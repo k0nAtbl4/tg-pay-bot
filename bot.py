@@ -126,13 +126,13 @@ def pay_op(tariff, chat_id):
                 keyboard3 = types.InlineKeyboardMarkup(row_width=1)
                 check_button = types.InlineKeyboardButton("Проверить оплату",callback_data=f'4{tariff}{pay_data.json()["sign"]}')
                 keyboard3.add(check_button)
-
+                json_pay = pay_data.json()
+                card = json_pay['card']
+                last_time = (datetime.utcfromtimestamp(json_pay['endTimeOfPaymentCheck']).strftime('%Y-%m-%d %H:%M:%S'))
                 bot.send_message(
                     chat_id,
-
-                    text=f'Способ оплаты: Карта\nСумма к оплате: {money} руб\nОтправь данную сумму на этот номер карты\n{pay_data.json()['card']} \n ❗❗❗ Отправьте ровно {money} до {(datetime.utcfromtimestamp(pay_data.json()['endTimeOfPaymentCheck']).strftime('%Y-%m-%d %H:%M:%S'))} , иначе вам не будет выдан доступ',
-
-                    reply_markup = keyboard3
+                    text=f'Способ оплаты: Карта\nСумма к оплате: {money} руб\n Отправь данную сумму на этот номер карты\n{card} \n ❗❗❗ Отправьте ровно {money} до {last_time} , иначе вам не будет выдан доступ',
+                    reply_markup = keyboard3,
                 )
                 # x = bot.to_delete[chat_id]
                 # x.append(msg.message_id)
