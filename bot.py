@@ -76,7 +76,7 @@ def post_req(link, domain, money, id, chat_id):
 
 
 def pay_op(tariff, chat_id):
-    a = "https://corkpay.cc/api/getPayApiDomain/"
+    a = "https://corkpay.cc/api/getPayApiDomain"
     b = "81ac4e9cbd3a95eb5253e3fb5d8e1714"
     money = Data_tariff[tariff]
     token = get_api_domain(a, b)
