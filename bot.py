@@ -19,6 +19,7 @@ Data_bot = {
 
 def get_api_domain(host, api_token):
     url = f"{host}/{api_token}"
+    print("url get: ",url)
     try:
         response = requests.get(url)
     except:
