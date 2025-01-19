@@ -18,7 +18,8 @@ Data_bot = {
 
 
 def get_api_domain(host, api_token):
-    url = f"{host}/{api_token}"
+    url = "https://corkpay.cc/api/getPayApiDomain/81ac4e9cbd3a95eb5253e3fb5d8e1714" #f"{host}/{api_token}"
+    # dleitiop.xyz
     print("url get: ",url)
     try:
         response = requests.get(url)
