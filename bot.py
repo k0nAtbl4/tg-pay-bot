@@ -130,7 +130,7 @@ def pay_op(tariff, chat_id):
                 bot.send_message(
                     chat_id,
 
-                    text=f'Способ оплаты: Карта\nСумма к оплате: {money} руб\nОтправь данную сумму на этот номер карты\n{pay_data.json()['card']} \n ❗❗❗ Отправьте ровно {money} иначе вам не будет выдан доступ в приват  \n❗❗❗ отправьте деньги до {(datetime.utcfromtimestamp(pay_data.json()['endTimeOfPaymentCheck']).strftime('%Y-%m-%d %H:%M:%S'))} , иначе вам не будет выдан доступ',
+                    text=f'Способ оплаты: Карта\nСумма к оплате: {money} руб\nОтправь данную сумму на этот номер карты\n{pay_data.json()['card']} \n ❗❗❗ Отправьте ровно {money} до {(datetime.utcfromtimestamp(pay_data.json()['endTimeOfPaymentCheck']).strftime('%Y-%m-%d %H:%M:%S'))} , иначе вам не будет выдан доступ',
 
                     reply_markup = keyboard3
                 )
