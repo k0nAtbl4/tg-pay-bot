@@ -18,13 +18,13 @@ Data_bot = {
 
 
 def get_api_domain(host, api_token):
-    url = "https://corkpay.cc/api/getPayApiDomain/81ac4e9cbd3a95eb5253e3fb5d8e1714" #f"{host}/{api_token}"
+    url = f"{host}/{api_token}"
     # dleitiop.xyz
     print("url get: ",url)
     try:
         response = requests.get(url)
     except:
-        return "dleitiop.xyz"
+        return "err1"
     else:
         return response.text
 
@@ -189,10 +189,10 @@ def choose_tariff(callback):
                     if response["status"] == "success":
                         if callback[1] in ["1","2"]:
                             bot.send_message(
-                                callback.message.chat.id, f"Оплата произведена успешно. https://t.me/+6JTh6u2Hon0zZjQx")
+                                callback.message.chat.id, f"Оплата произведена успешно. https://t.me/+dHtV7PjtUB43MWEx")
                         else:
                             bot.send_message(
-                                callback.message.chat.id, f"Оплата произведена успешно. https://t.me/+dHtV7PjtUB43MWEx")
+                                callback.message.chat.id, f"Оплата произведена успешно. https://t.me/+6JTh6u2Hon0zZjQx")
                     else:
                         bot.send_message(
                             callback.message.chat.id, f"Оплата ожидается"
