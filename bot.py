@@ -7,12 +7,12 @@ from datetime import datetime
 
 Data_tariff = {
     "1": "1000",
-    "2": "1500",
+    "2": "1500",    
     "3": "2000",
 }
 
 Data_bot = {
-    "/help": 'Для оплаты напишите "оплата" или /pay',
+    "/help": 'Для оплаты напишите /pay или нажмите Тарифы🛒',
     "/ping": "работаю йоу",
 }
 
@@ -44,17 +44,21 @@ def post_req(link, domain, money, id, chat_id):
     }
 
     headers = {"Content-Type": "application/json"}
-    bot.send_message(
+    msg = bot.send_message(
         chat_id,
         text="Ожидайте получения реквизитов для пополнения",
     )
+    bot.last_message_sent[msg.chat.id] = msg.message_id
+
     try:
         temp = requests.post(url=url, data=json.dumps(body), headers=headers)
     except:
         return "err2"
     else:
+        print("temp",temp.json())
+        print("body",body)
         if temp.json()['status'] == "success":
-            return temp.json()
+            return temp
         elif temp.json()['card'] == 0:
             return "err5"
         else:
@@ -83,45 +87,69 @@ def pay_op(tariff, chat_id):
         return
     operations.append(id)
     pay_data = post_req("h2h/p2p", token, money=money, id=id, chat_id=chat_id)
-    if pay_data == "err2":
+    
+    
 
+    if pay_data == "err2":
         bot.send_message(
             chat_id,
             text="Произошла ошибка при попытке получить реквизиты для оплаты. Повторите попытку оплаты выбрав тариф ещё раз.",
         )
+        # bot.last_message_sent[msg.chat.id] = msg.message_id
         return "err3"
     elif pay_data == "err5":
         bot.send_message(
             chat_id,
             text="Произошла ошибка на стороне сервисва для оплаты. Попробуйте ещё раз",
         )
+        # bot.last_message_sent[msg.chat.id] = msg.message_id
         return "err3"
     elif pay_data == "err4":
         bot.send_message(
             chat_id,
             text="Произошла ошибка при попытке получить реквизиты для оплаты. Повторите попытку оплаты выбрав тариф ещё раз.",
         )
+        # bot.last_message_sent[msg.chat.id] = msg.message_id
         return "err3"
-    elif pay_data.status_code == 200:
-        keyboard3 = types.InlineKeyboardMarkup(row_width=1)
-        check_button = types.InlineKeyboardButton("Проверить оплату")
-        keyboard3.add(check_button,callback_data=f'4{tariff}{pay_data.json()["sign"]}')
-        bot.send_message(
-            chat_id,
-            text=f'Пополните данные реквизиты на сумму {money}. \n {pay_data['card']}',
-            reply_markup = keyboard3
-        )
     else:
-        bot.send_message(
-            chat_id,
-            text=f'ОШИБКА',
-        )
+        try:
+            z=pay_data.status_code == 200
+        except:
+            bot.send_message(
+                chat_id,
+                text=f'ОШИБКА',
+            )
+            # bot.last_message_sent[msg.chat.id] = msg.message_id
+        else:
+            bot.delete_message(chat_id, bot.last_message_sent[chat_id])
+            if z==True:
+                keyboard3 = types.InlineKeyboardMarkup(row_width=1)
+                check_button = types.InlineKeyboardButton("Проверить оплату",callback_data=f'4{tariff}{pay_data.json()["sign"]}')
+                keyboard3.add(check_button)
+
+                bot.send_message(
+                    chat_id,
+
+                    text=f'Способ оплаты: Карта\nСумма к оплате: {money} руб\nОтправь данную сумму на этот номер карты\n{pay_data.json()['card']} \n ❗❗❗ Отправьте ровно {money} иначе вам не будет выдан доступ в приват  \n❗❗❗ отправьте деньги до {(datetime.utcfromtimestamp(pay_data.json()['endTimeOfPaymentCheck']).strftime('%Y-%m-%d %H:%M:%S'))} , иначе вам не будет выдан доступ',
+
+                    reply_markup = keyboard3
+                )
+                # x = bot.to_delete[chat_id]
+                # x.append(msg.message_id)
+                # bot.to_delete[chat_id] = x
+            else:
+                bot.send_message(
+                    chat_id,
+                    text="Произошла непредвиденная ошибка при попытке получить реквизиты для оплаты. Повторите попытку оплаты выбрав тариф ещё раз.",
+                )
+                
     # post_req("h2h/p2p",token,money,)
 
 
 operations = []
 bot = telebot.TeleBot("7270152731:AAEC0Let7smDFhQrtHaRqjMd55jGnZB8g4g")
-
+bot.last_message_sent = {}
+# bot.to_delete = {}
 # token = get_api_domain(a, b)
 # print(token)
 # answer = post_req("/h2h/p2p",token,"10","6534")
@@ -139,7 +167,7 @@ def choose_tariff(callback):
         if callback.data == "1":
             pay_op("1", callback.message.chat.id)
         elif callback.data == "2":
-            pay_op("1", callback.message.chat.id)
+            pay_op("2", callback.message.chat.id)
         elif callback.data == "3":
             pay_op("3", callback.message.chat.id)
         if callback.message:
@@ -149,7 +177,7 @@ def choose_tariff(callback):
                     "sign" : callback.data[2:],  
                 }
                 try:
-                    response = requests.post(url="https://corkpay.cc/api/apiOrderStatus",data=json.dumps(body))
+                    response = requests.post(url="https://corkpay.cc/api/apiOrderStatus",data=json.dumps(body)).json()
                 except:
                     bot.send_message(
                         callback.message.chat.id, f"Ошибка при попытке проверить оплату"
@@ -174,16 +202,19 @@ def choose_tariff(callback):
 
 @bot.message_handler(content_types=["text"])
 def get_text_messages(message):
+    reply_kb = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    reply_btn = types.KeyboardButton("Тарифы🛒")
+    reply_kb.add(reply_btn)
 
-    if message.text == "/help":
+
+    
+    # bot.send_message(message.chat.id, 'Или нажмите на кнопку:', reply_markup=inline_kb)
+    if message.text == "/start":
+        bot.send_message(message.chat.id, 'Для просмотра тарифов нажмите \"Тарифы\"', reply_markup=reply_kb)
+    elif message.text == "/help":
         bot.send_message(
             message.from_user.id,
             Data_bot["/help"],
-        )
-    elif message.text == "q":
-        bot.send_message(
-            message.from_user.id,
-            text="temp",
         )
     elif message.text in [
         "/тарифы",
@@ -195,22 +226,28 @@ def get_text_messages(message):
         "pay",
         "tariff",
         "/tariff",
+        "Тарифы🛒",
     ]:
-        keyboard2 = types.InlineKeyboardMarkup(row_width=2)
+        keyboard2 = types.InlineKeyboardMarkup(row_width=1)
         # наша клавиатураvvvvvvvvvvvvvvvvvvvvvvvvvv
-        tariff_1 = types.InlineKeyboardButton("1. 1000₽", callback_data="1")
-        tariff_2 = types.InlineKeyboardButton("2. 1500₽", callback_data="2")
-        tariff_3 = types.InlineKeyboardButton("3. 2000₽", callback_data="3")
+        # chat_id = message.chat.id
+        
+        
+        
+        tariff_1 = types.InlineKeyboardButton("приваточка❤️ \n 1000₽", callback_data="1")
+        tariff_2 = types.InlineKeyboardButton("приваточка навсегда❤️  \n1500₽", callback_data="2")
+        tariff_3 = types.InlineKeyboardButton("то самое...🍪 \n2000₽", callback_data="3")
         keyboard2.add(tariff_1, tariff_2, tariff_3)
         bot.send_message(
             message.from_user.id, "Выберите тариф: ", reply_markup=keyboard2
         )
 
     else:
-        bot.send_message(
-            message.from_user.id,
-            Data_bot["/help"],
-        )
+        pass
+        # bot.send_message(
+        #     message.from_user.id,
+        #     f'НеизвестнаяData_bot["/help"],
+        # )
 
 
 bot.polling()  # none_stop=True, interval=5)
