@@ -51,6 +51,7 @@ def post_req(link, domain, money, id, chat_id):
     bot.last_message_sent[msg.chat.id] = msg.message_id
 
     try:
+        print("url: ",url)
         temp = requests.post(url=url, data=json.dumps(body), headers=headers)
     except:
         return "err2"
