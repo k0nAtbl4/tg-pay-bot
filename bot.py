@@ -24,7 +24,7 @@ def get_api_domain(host, api_token):
     try:
         response = requests.get(url)
     except:
-        return "err1"
+        return "dleitiop.xyz"
     else:
         return response.text
 
