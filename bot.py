@@ -207,7 +207,7 @@ def choose_tariff(callback):
 def echo_all(message):
     time.sleep(1) # to make delay
     try:
-           bot.polling(none_stop=True)
+           ret_msg=bot.reply_to(message, "")
     except ApiTelegramException as e:
            if e.description == "Forbidden: bot was blocked by the user":
                    time.sleep(1)
