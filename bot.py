@@ -1,10 +1,12 @@
 import telebot
+import time
 from telebot import types
 import requests
 import json
 from datetime import datetime
+bot = telebot.TeleBot("7270152731:AAEC0Let7smDFhQrtHaRqjMd55jGnZB8g4g")
+bot.last_message_sent = {}
 
-bot.infinity_polling(timeout=10, long_polling_timeout = 5)
 Data_tariff = {
     "1": "1000",
     "2": "1500",    
@@ -150,8 +152,7 @@ def pay_op(tariff, chat_id):
 
 
 operations = []
-bot = telebot.TeleBot("7270152731:AAEC0Let7smDFhQrtHaRqjMd55jGnZB8g4g")
-bot.last_message_sent = {}
+
 # bot.to_delete = {}
 # token = get_api_domain(a, b)
 # print(token)
@@ -254,3 +255,11 @@ def get_text_messages(message):
 
 
 bot.polling()  # none_stop=True, interval=5)
+def infinity_polling(self, *args, **kwargs):
+    while not self.__stop_polling.is_set():
+        try:
+            self.polling(*args, **kwargs)
+        except Exception as e:
+            time.sleep(5)
+            pass
+bot.infinity_polling(timeout=10, long_polling_timeout = 5)
