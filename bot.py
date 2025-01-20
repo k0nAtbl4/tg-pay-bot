@@ -3,6 +3,7 @@ import time
 from telebot import types
 import requests
 import json
+from telebot.apihelper import ApiTelegramException
 from datetime import datetime
 bot = telebot.TeleBot("7270152731:AAEC0Let7smDFhQrtHaRqjMd55jGnZB8g4g")
 bot.last_message_sent = {}
@@ -202,16 +203,20 @@ def choose_tariff(callback):
             bot.send_message(
                 callback.message.chat.id, f"Ошибка"
             )
-
+@bot.message_handler() # "func=lambda m: True" isn't needed
+def echo_all(message):
+    time.sleep(1) # to make delay
+    try:
+           bot.polling(none_stop=True)
+    except ApiTelegramException as e:
+           if e.description == "Forbidden: bot was blocked by the user":
+                   time.sleep(1)
 
 @bot.message_handler(content_types=["text"])
 def get_text_messages(message):
     reply_kb = types.ReplyKeyboardMarkup(resize_keyboard=True)
     reply_btn = types.KeyboardButton("Тарифы🛒")
     reply_kb.add(reply_btn)
-
-
-    
     # bot.send_message(message.chat.id, 'Или нажмите на кнопку:', reply_markup=inline_kb)
     if message.text == "/start":
         bot.send_message(message.chat.id, 'Для просмотра тарифов нажмите \"Тарифы\"', reply_markup=reply_kb)
