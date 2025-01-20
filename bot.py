@@ -4,7 +4,7 @@ import requests
 import json
 from datetime import datetime
 
-
+bot.infinity_polling(timeout=10, long_polling_timeout = 5)
 Data_tariff = {
     "1": "1000",
     "2": "1500",    
