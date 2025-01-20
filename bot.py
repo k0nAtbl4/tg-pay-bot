@@ -3,6 +3,7 @@ import time
 from telebot import types
 import requests
 import json
+from telegram.error import BadRequest
 from telebot.apihelper import ApiTelegramException
 from datetime import datetime
 bot = telebot.TeleBot("7270152731:AAEC0Let7smDFhQrtHaRqjMd55jGnZB8g4g")
@@ -257,7 +258,7 @@ def infinity_polling(self, *args, **kwargs):
     while not self.__stop_polling.is_set():
         try:
             self.polling(*args, **kwargs)
-        except Exception as e:
+        except BadRequest as e:
             if e.description == "Forbidden: bot was blocked by the user":
                    print("Attention please! The user {} has blocked the bot. I can't send anything to them")
             time.sleep(5)
