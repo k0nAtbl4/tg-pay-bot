@@ -8,9 +8,9 @@ bot = telebot.TeleBot("7382688925:AAHlID6dhrnr9WsJKVQYhZT29dk_CFhtH7E")
 bot.last_message_sent = {}
 
 Data_tariff = {
-    "1": "1000",
-    "2": "1500",    
-    "3": "2000",
+    "1": "1010",
+    "2": "1510",    
+    "3": "1999",
 }
 
 Data_bot = {
