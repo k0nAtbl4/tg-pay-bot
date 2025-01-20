@@ -253,8 +253,8 @@ def get_text_messages(message):
         # )
 
 
-bot.polling()  # none_stop=True, interval=5)
-def infinity_polling(self, *args, **kwargs):
+bot.polling(none_stop=True, interval=5)
+"""def infinity_polling(self, *args, **kwargs):
     while not self.__stop_polling.is_set():
         try:
             self.polling(*args, **kwargs)
@@ -263,4 +263,4 @@ def infinity_polling(self, *args, **kwargs):
                    print("Attention please! The user {} has blocked the bot. I can't send anything to them")
             time.sleep(5)
             pass
-bot.infinity_polling(timeout=10, long_polling_timeout = 5)
+bot.infinity_polling(timeout=10, long_polling_timeout = 5)"""
