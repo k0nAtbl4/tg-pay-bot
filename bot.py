@@ -3,8 +3,6 @@ import time
 from telebot import types
 import requests
 import json
-from telegram.error import BadRequest
-from telebot.apihelper import ApiTelegramException
 from datetime import datetime
 bot = telebot.TeleBot("7270152731:AAEC0Let7smDFhQrtHaRqjMd55jGnZB8g4g")
 bot.last_message_sent = {}
