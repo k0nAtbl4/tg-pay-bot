@@ -258,6 +258,8 @@ def infinity_polling(self, *args, **kwargs):
         try:
             self.polling(*args, **kwargs)
         except Exception as e:
+            if e.description == "Forbidden: bot was blocked by the user":
+                   print("Attention please! The user {} has blocked the bot. I can't send anything to them")
             time.sleep(5)
             pass
 bot.infinity_polling(timeout=10, long_polling_timeout = 5)
