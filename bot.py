@@ -205,18 +205,19 @@ def choose_tariff(callback):
             )
 @bot.message_handler() # "func=lambda m: True" isn't needed
 def echo_all(message):
-    time.sleep(1) # to make delay
+    time.sleep(20) # to make delay
     try:
            ret_msg=bot.reply_to(message, "")
     except ApiTelegramException as e:
            if e.description == "Forbidden: bot was blocked by the user":
-                   time.sleep(1)
+                   print("Attention please! The user {} has blocked the bot. I can't send anything to them".format(message.chat.id))
 
 @bot.message_handler(content_types=["text"])
 def get_text_messages(message):
     reply_kb = types.ReplyKeyboardMarkup(resize_keyboard=True)
     reply_btn = types.KeyboardButton("Тарифы🛒")
     reply_kb.add(reply_btn)
+    
     # bot.send_message(message.chat.id, 'Или нажмите на кнопку:', reply_markup=inline_kb)
     if message.text == "/start":
         bot.send_message(message.chat.id, 'Для просмотра тарифов нажмите \"Тарифы\"', reply_markup=reply_kb)
