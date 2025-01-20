@@ -135,7 +135,7 @@ def pay_op(tariff, chat_id):
                 keyboard3.add(check_button)
                 json_pay = pay_data.json()
                 card = json_pay['card']
-                last_time = (datetime.utcfromtimestamp(json_pay['endTimeOfPaymentCheck']).strftime('%Y-%m-%d %H:%M:%S'))
+                last_time = (datetime.fromtimestamp(int(json_pay['endTimeOfPaymentCheck'])).strftime('%Y-%m-%d %H:%M:%S'))
                 bot.send_message(
                     chat_id,
                     text=f'Способ оплаты: Карта\nСумма к оплате: {money} руб\n Отправь данную сумму на этот номер карты\n{card} \n ❗❗❗ Отправьте ровно {money} до {last_time} , иначе вам не будет выдан доступ',
