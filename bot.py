@@ -4,7 +4,7 @@ from telebot import types
 import requests
 import json
 from datetime import datetime
-bot = telebot.TeleBot("7382688925:AAHlID6dhrnr9WsJKVQYhZT29dk_CFhtH7E")
+bot = telebot.TeleBot("7270152731:AAGqqQGIdzSZt1TUsQ7BPeke7RkefF7a8Lc")
 bot.last_message_sent = {}
 
 Data_tariff = {
