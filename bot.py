@@ -4,7 +4,16 @@ from telebot import types
 import requests
 import json
 from datetime import datetime
-bot = telebot.TeleBot("7270152731:AAGqqQGIdzSZt1TUsQ7BPeke7RkefF7a8Lc")
+# import dotenv
+from dotenv import load_dotenv
+from os import getenv
+load_dotenv()
+
+# Получаем значение переменной
+api = getenv("BOT_TOKEN")
+
+
+bot = telebot.TeleBot(api)
 bot.last_message_sent = {}
 
 Data_tariff = {
@@ -235,9 +244,9 @@ def get_text_messages(message):
         
         
         
-        tariff_1 = types.InlineKeyboardButton("приваточка❤️ \n 1000₽", callback_data="1")
-        tariff_2 = types.InlineKeyboardButton("приваточка навсегда❤️  \n1500₽", callback_data="2")
-        tariff_3 = types.InlineKeyboardButton("то самое...🍪 \n2000₽", callback_data="3")
+        tariff_1 = types.InlineKeyboardButton(f"приваточка❤️ \n {Data_tariff['1']}", callback_data="1")
+        tariff_2 = types.InlineKeyboardButton(f"приваточка навсегда❤️  \n{Data_tariff['2']}", callback_data="2")
+        tariff_3 = types.InlineKeyboardButton(f"то самое...🍪 \n{Data_tariff['3']}", callback_data="3")
         keyboard2.add(tariff_1, tariff_2, tariff_3)
         bot.send_message(
             message.from_user.id, "Выберите тариф: ", reply_markup=keyboard2
@@ -251,7 +260,7 @@ def get_text_messages(message):
         # )
 
 
-bot.polling(none_stop=True, interval=5)
+bot.polling(none_stop=True, interval=2)
 """def infinity_polling(self, *args, **kwargs):
     while not self.__stop_polling.is_set():
         try:
